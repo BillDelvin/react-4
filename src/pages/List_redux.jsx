@@ -24,7 +24,7 @@ const contentLength = (value) => {
 
 const ListRedux = () => {
   const dispatch = useDispatch();
-  const { listData, isLoading } = useSelector((state) => state.list);
+  const { listData, isLoading, isError, errorMessage } = useSelector((state) => state.list);
 
   useEffect(() => {
     // calling API handler from REDUX
@@ -52,6 +52,13 @@ const ListRedux = () => {
     return (
       <section style={{ textAlign: "center", marginTop: "20px" }}>
         <Spinner />
+      </section>
+    );
+
+  if (isError)
+    return (
+      <section style={{ textAlign: "center", marginTop: "20px" }}>
+        <h3 style={{ color: "red" }}>{errorMessage}</h3>
       </section>
     );
 

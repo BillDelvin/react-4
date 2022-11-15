@@ -4,6 +4,8 @@ import Axios from "axios";
 const initialState = {
   listData: [],
   isLoading: true,
+  isError: false,
+  errorMessage: "",
 };
 
 const slice = createSlice({
@@ -25,6 +27,8 @@ const slice = createSlice({
       .addCase(fetchList.rejected, (state, actions) => {
         // FAILED
         state.isLoading = false;
+        state.isError = true;
+        state.errorMessage = actions.error.message;
       });
   },
 });
@@ -44,5 +48,6 @@ export const fetchList = createAsyncThunk("fetchList", async () => {
   } catch (error) {
     console.log("listSlice.js");
     console.log(error);
+    throw error.message;
   }
 });
