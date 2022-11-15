@@ -1,8 +1,9 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
 import Axios from "axios";
 
 const initialState = {
   listData: [],
+  searchData: [],
   isLoading: true,
   isError: false,
   errorMessage: "",
@@ -13,6 +14,15 @@ const slice = createSlice({
   initialState,
   reducers: {
     // all logic will be write in here
+    search: (state, { payload }) => {
+      const searchValue = payload.toLowerCase();
+      let listSearch = [];
+      const searchData = state.listData.filter((val) =>
+        val.name.toLowerCase().includes(searchValue)
+      );
+      listSearch = searchData;
+      state.searchData = listSearch;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -33,8 +43,7 @@ const slice = createSlice({
   },
 });
 
-// export const {} = slice.actions;
-
+export const { search } = slice.actions;
 export default slice.reducer;
 
 export const fetchList = createAsyncThunk("fetchList", async () => {

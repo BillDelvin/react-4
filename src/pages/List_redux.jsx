@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchList } from "../store/slice/listSlice";
+import { fetchList, search } from "../store/slice/listSlice";
 
 import HOC from "../components/HOC";
 import Spinner from "../components/Spinner";
@@ -24,7 +24,10 @@ const contentLength = (value) => {
 
 const ListRedux = () => {
   const dispatch = useDispatch();
-  const { listData, isLoading, isError, errorMessage } = useSelector((state) => state.list);
+  const { listData, searchData, isLoading, isError, errorMessage } = useSelector(
+    (state) => state.list
+  );
+  const inputRef = useRef("");
 
   useEffect(() => {
     // calling API handler from REDUX
@@ -38,15 +41,26 @@ const ListRedux = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const listDisplay = listData.map((val) => (
-    <div key={val.id} className="col-md-4 col-lg-3">
-      <Card>
-        <h4>{titleLength(val.name)}</h4>
-        <h6>{val.email}</h6>
-        <p style={{ textAlign: "justify" }}>{contentLength(val.body)}</p>
-      </Card>
-    </div>
-  ));
+  const listDisplay =
+    searchData.length === 0 && inputRef.current === ""
+      ? listData.map((val) => (
+          <div key={val.id} className="col-md-4 col-lg-3">
+            <Card>
+              <h4>{titleLength(val.name)}</h4>
+              <h6>{val.email}</h6>
+              <p style={{ textAlign: "justify" }}>{contentLength(val.body)}</p>
+            </Card>
+          </div>
+        ))
+      : searchData.map((val) => (
+          <div key={val.id} className="col-md-4 col-lg-3">
+            <Card>
+              <h4>{titleLength(val.name)}</h4>
+              <h6>{val.email}</h6>
+              <p style={{ textAlign: "justify" }}>{contentLength(val.body)}</p>
+            </Card>
+          </div>
+        ));
 
   if (isLoading)
     return (
@@ -66,6 +80,22 @@ const ListRedux = () => {
     <HOC headerTitle="List Redux">
       <h4>Handling request using Redux</h4>
       {/* display handling data */}
+      <div className="input-group my-3">
+        <span className="input-group-text" id="search">
+          Search
+        </span>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Search"
+          onChange={(e) =>
+            setTimeout(() => {
+              inputRef.current = e.target.value;
+              dispatch(search(e.target.value));
+            }, 800)
+          }
+        />
+      </div>
       <div className="row">
         {/* row = 12 */}
         {listDisplay}
