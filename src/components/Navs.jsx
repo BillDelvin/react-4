@@ -1,6 +1,6 @@
 import { Navbar, Container, Nav } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
-import { HOME, COUNT, COUNT_REDUX } from "../router";
+import { HOME, COUNT, COUNT_REDUX, LIST_REDUX } from "../router";
 
 const Navs = () => {
   return (
@@ -20,6 +20,9 @@ const Navs = () => {
             </NavLink>
             <NavLink to={COUNT_REDUX} className="nav-link">
               Count Redux
+            </NavLink>{" "}
+            <NavLink to={LIST_REDUX} className="nav-link">
+              List Redux
             </NavLink>
           </Nav>
         </Navbar.Collapse>
